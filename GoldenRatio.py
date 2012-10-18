@@ -1,7 +1,9 @@
-import sublime, sublime_plugin
+import sublime
+import sublime_plugin
 
 XMIN, YMIN, XMAX, YMAX = range(4)
 GOLDEN_RATIO = 1.618
+
 
 class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
@@ -10,12 +12,11 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
     def get_layout(self):
         layout = self.window.get_layout()
-        print layout
+        #print layout
         cells = layout["cells"]
         rows = layout["rows"]
-        cols = layout["cols"]   
+        cols = layout["cols"]
         return rows, cols, cells
-
 
     def resize_to_golden_ratio(self):
         window = self.window
@@ -24,11 +25,11 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
         current_group = window.active_group()
 
         current_cell = cells[current_group]
-        print(cols)
+        # print(cols)
         colnum = len(cols) - 1
         if colnum > 1:
             colspan = (current_cell[XMAX] - current_cell[XMIN])
-            other_width = dest_width = 1 / GOLDEN_RATIO  / colspan
+            other_width = dest_width = 1 / GOLDEN_RATIO / colspan
 
             other_width = (1 - 1 / GOLDEN_RATIO) / (colnum - colspan)
 
@@ -41,12 +42,12 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
                     v = v + dest_width
                 else:
                     v = v + other_width
-                i = i+1
+                i = i + 1
 
         rownum = len(rows) - 1
         if rownum > 1:
             rowspan = (current_cell[YMAX] - current_cell[YMIN])
-            other_height = dest_height = 1 / GOLDEN_RATIO  / rowspan
+            other_height = dest_height = 1 / GOLDEN_RATIO / rowspan
 
             other_height = (1 - 1 / GOLDEN_RATIO) / (rownum - rowspan)
 
@@ -59,10 +60,16 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
                     v = v + dest_height
                 else:
                     v = v + other_height
-                i = i+1
-
-
+                i = i + 1
 
         layout = {"cols": cols, "rows": rows, "cells": cells}
-        print layout
+        #print layout
         window.set_layout(layout)
+
+
+class GoldenRatioAutoRun(sublime_plugin.EventListener):
+    def on_activated(self, view):
+        window = sublime.active_window()
+        auto_resize = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
+        if auto_resize:
+            window.run_command('golden_ratio')
