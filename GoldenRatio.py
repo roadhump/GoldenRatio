@@ -12,7 +12,6 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
     def get_layout(self):
         layout = self.window.get_layout()
-        #print layout
         cells = layout["cells"]
         rows = layout["rows"]
         cols = layout["cols"]
@@ -25,7 +24,6 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
         current_group = window.active_group()
 
         current_cell = cells[current_group]
-        # print(cols)
         colnum = len(cols) - 1
         if colnum > 1:
             colspan = (current_cell[XMAX] - current_cell[XMIN])
@@ -63,7 +61,6 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
                 i = i + 1
 
         layout = {"cols": cols, "rows": rows, "cells": cells}
-        #print layout
         window.set_layout(layout)
 
 
