@@ -2,8 +2,6 @@ import sublime
 import sublime_plugin
 
 XMIN, YMIN, XMAX, YMAX = range(4)
-GOLDEN_RATIO = 1.618
-
 
 class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
@@ -17,48 +15,44 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
         cols = layout["cols"]
         return rows, cols, cells
 
+    def _dim(self, dim_items, cur_cell_min, cur_cell_max, ratio):
+
+        dimnum = len(dim_items)-1
+        span = (cur_cell_max - cur_cell_min)
+
+        if dimnum > 1 and dimnum > span:
+            
+            dest_size = 1 / ratio / span
+            other_size = (1 - 1 / ratio) / (dimnum - span)
+            
+            v = 0.0
+            i = 0
+            for item in dim_items:
+                dim_items[i] = v
+
+                if i >= cur_cell_min and i < cur_cell_max:
+                    v = v + dest_size
+                else:
+                    v = v + other_size
+                i = i + 1
+
+        return dim_items
+
     def resize_to_golden_ratio(self):
+
         window = self.window
         view = window.active_view()
         rows, cols, cells = self.get_layout()
         current_group = window.active_group()
 
         current_cell = cells[current_group]
-        colnum = len(cols) - 1
-        if colnum > 1:
-            colspan = (current_cell[XMAX] - current_cell[XMIN])
-            other_width = dest_width = 1 / GOLDEN_RATIO / colspan
 
-            other_width = (1 - 1 / GOLDEN_RATIO) / (colnum - colspan)
+        ratio = sublime.load_settings('GoldenRatio.sublime-settings').get('golden_ratio')
+        if ratio <= 1: 
+            ratio = 1.05
 
-            v = 0.0
-            i = 0
-            for col in cols:
-                cols[i] = v
-
-                if i >= current_cell[XMIN] and i < current_cell[XMAX]:
-                    v = v + dest_width
-                else:
-                    v = v + other_width
-                i = i + 1
-
-        rownum = len(rows) - 1
-        if rownum > 1:
-            rowspan = (current_cell[YMAX] - current_cell[YMIN])
-            other_height = dest_height = 1 / GOLDEN_RATIO / rowspan
-
-            other_height = (1 - 1 / GOLDEN_RATIO) / (rownum - rowspan)
-
-            v = 0.0
-            i = 0
-            for row in rows:
-                rows[i] = v
-
-                if i >= current_cell[YMIN] and i < current_cell[YMAX]:
-                    v = v + dest_height
-                else:
-                    v = v + other_height
-                i = i + 1
+        cols = self._dim(cols, current_cell[XMIN], current_cell[XMAX], ratio)
+        rows = self._dim(rows, current_cell[YMIN], current_cell[YMAX], ratio)
 
         layout = {"cols": cols, "rows": rows, "cells": cells}
         window.set_layout(layout)

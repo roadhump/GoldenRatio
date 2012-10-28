@@ -1,3 +1,4 @@
 {
-	"auto_resize": false
+    "auto_resize": false,
+    "golden_ratio": 1.618  
 }
