@@ -25,7 +25,8 @@ Settings
 
 Use `Preferences -> Package Settings -> GoldenRatio`
 
-`auto_resize` - resize group automatically on focus
+* `auto_resize` - resize group automatically on focus
+* `golden_ratio` - ratio itself, proportion of window/active group, 1.05 min
 
 Keymaps
 -------
