@@ -2,11 +2,10 @@ import sublime
 import sublime_plugin
 
 XMIN, YMIN, XMAX, YMAX = range(4)
+auto_resize_command = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
 
-class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
-    def run(self):
-        self.resize_to_golden_ratio()
+class PaneCommand(sublime_plugin.WindowCommand):
 
     def get_layout(self):
         layout = self.window.get_layout()
@@ -17,14 +16,14 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
 
     def _dim(self, dim_items, cur_cell_min, cur_cell_max, ratio):
 
-        dimnum = len(dim_items)-1
+        dimnum = len(dim_items) - 1
         span = (cur_cell_max - cur_cell_min)
 
         if dimnum > 1 and dimnum > span:
-            
+
             dest_size = 1 / ratio / span
             other_size = (1 - 1 / ratio) / (dimnum - span)
-            
+
             v = 0.0
             i = 0
             for item in dim_items:
@@ -48,7 +47,7 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
         current_cell = cells[current_group]
 
         ratio = sublime.load_settings('GoldenRatio.sublime-settings').get('golden_ratio')
-        if ratio <= 1: 
+        if ratio <= 1:
             ratio = 1.05
 
         cols = self._dim(cols, current_cell[XMIN], current_cell[XMAX], ratio)
@@ -58,9 +57,20 @@ class GoldenRatioCommand(sublime_plugin.WindowCommand):
         window.set_layout(layout)
 
 
+class GoldenRatioCommand(PaneCommand):
+    def run(self):
+        self.resize_to_golden_ratio()
+
+
+class AutoResizeSettingCommand(PaneCommand):
+    def run(self, on):
+        global auto_resize_command
+        auto_resize_command = on
+
+
 class GoldenRatioAutoRun(sublime_plugin.EventListener):
     def on_activated(self, view):
         window = sublime.active_window()
         auto_resize = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
-        if auto_resize:
+        if auto_resize or auto_resize_command:
             window.run_command('golden_ratio')

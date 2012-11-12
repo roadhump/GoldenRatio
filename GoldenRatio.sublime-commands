@@ -1,3 +1,5 @@
 [
-	{ "command": "golden_ratio", "caption": "Golden Ratio" }
+	{ "command": "golden_ratio", "caption": "Golden Ratio" },
+	{ "command": "auto_resize_setting", "args": {"on": "true"}, "caption": "Golden Ratio: Enable auto resize" },
+	{ "command": "auto_resize_setting", "args": {"on": ""}, "caption": "Golden Ratio: Disable auto resize" }
 ]
