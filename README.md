@@ -47,3 +47,4 @@ Created by Aliaksei Shytkin [roadhump](https://twitter.com/roadhump)
 Improved upon with contributions by:
 
 * Jesse Robertson (speilberg0)
+* Gat Manuel (Gatix)
