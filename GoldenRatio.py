@@ -2,7 +2,6 @@ import sublime
 import sublime_plugin
 
 XMIN, YMIN, XMAX, YMAX = range(4)
-auto_resize_command = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
 
 
 class PaneCommand(sublime_plugin.WindowCommand):
@@ -56,21 +55,25 @@ class PaneCommand(sublime_plugin.WindowCommand):
         layout = {"cols": cols, "rows": rows, "cells": cells}
         window.set_layout(layout)
 
+    def auto_resize_toggle(self):
+
+        setting = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
+        sublime.load_settings('GoldenRatio.sublime-settings').set('auto_resize', ('' if setting else True))
+
 
 class GoldenRatioCommand(PaneCommand):
     def run(self):
         self.resize_to_golden_ratio()
 
 
-class AutoResizeSettingCommand(PaneCommand):
-    def run(self, on):
-        global auto_resize_command
-        auto_resize_command = on
+class AutoResizeToggleCommand(PaneCommand):
+    def run(self):
+        self.auto_resize_toggle()
 
 
 class GoldenRatioAutoRun(sublime_plugin.EventListener):
     def on_activated(self, view):
         window = sublime.active_window()
         auto_resize = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
-        if auto_resize or auto_resize_command:
+        if auto_resize:
             window.run_command('golden_ratio')
