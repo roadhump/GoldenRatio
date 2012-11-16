@@ -6,6 +6,10 @@ XMIN, YMIN, XMAX, YMAX = range(4)
 
 class PaneCommand(sublime_plugin.WindowCommand):
 
+    def __init__(self, smth):
+        super(PaneCommand, self).__init__(smth)
+        self.current_group = -1
+
     def get_layout(self):
         layout = self.window.get_layout()
         cells = layout["cells"]
@@ -40,9 +44,14 @@ class PaneCommand(sublime_plugin.WindowCommand):
 
         window = self.window
         view = window.active_view()
-        rows, cols, cells = self.get_layout()
         current_group = window.active_group()
 
+        if current_group == self.current_group:
+            return
+
+        self.current_group = current_group
+
+        rows, cols, cells = self.get_layout()
         current_cell = cells[current_group]
 
         ratio = sublime.load_settings('GoldenRatio.sublime-settings').get('golden_ratio')
@@ -73,6 +82,7 @@ class AutoResizeToggleCommand(PaneCommand):
 
 class GoldenRatioAutoRun(sublime_plugin.EventListener):
     def on_activated(self, view):
+
         window = sublime.active_window()
         auto_resize = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
         if auto_resize:
