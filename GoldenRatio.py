@@ -85,5 +85,5 @@ class GoldenRatioAutoRun(sublime_plugin.EventListener):
 
         window = sublime.active_window()
         auto_resize = sublime.load_settings('GoldenRatio.sublime-settings').get('auto_resize')
-        if auto_resize:
+        if window and auto_resize:
             window.run_command('golden_ratio')
