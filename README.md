@@ -31,8 +31,8 @@ Use `Preferences -> Package Settings -> GoldenRatio`
 Keymaps
 -------
 
-* Windows and Linux `ctrl+g ctrl+r` 
-* Mac OS `super+g super+r`
+* Windows and Linux `ctrl+k ctrl+r
+* Mac OS `super+k super+r`
 
 Credits
 -------
